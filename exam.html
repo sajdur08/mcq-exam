@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MCQ Exam</title>
+  <style>
+    body { font-family: Arial; text-align: center; padding: 20px; }
+    .question-box { max-width: 600px; margin: auto; }
+    .btn { display: block; margin: 10px; padding: 10px; border: 1px solid #333; cursor: pointer; }
+    .btn:hover { background: #f0f0f0; }
+    #timer { font-size: 20px; color: red; }
+  </style>
+</head>
+<body>
+
+<h2>MCQ Exam</h2>
+<div id="timer">Time: 30</div>
+
+<div class="question-box">
+  <h3 id="question"></h3>
+  <div id="options"></div>
+</div>
+
+<script>
+const questions = [
+  { q: "What is 2+2?", options: ["3","4","5","6"], answer: 1 },
+  { q: "Capital of Bangladesh?", options: ["Chittagong","Dhaka","Khulna","Sylhet"], answer: 1 },
+  { q: "5 x 3 = ?", options: ["15","10","20","25"], answer: 0 },
+  { q: "Sun rises in?", options: ["West","North","East","South"], answer: 2 },
+  { q: "HTML stands for?", options: ["Hyper Trainer","Hyper Text Markup Language","High Text","None"], answer: 1 },
+  { q: "JS is?", options: ["Language","Car","Food","Animal"], answer: 0 },
+  { q: "10/2=?", options: ["2","3","5","10"], answer: 2 },
+  { q: "Color of sky?", options: ["Blue","Red","Green","Black"], answer: 0 },
+  { q: "Water formula?", options: ["CO2","H2O","O2","NaCl"], answer: 1 },
+  { q: "Earth is?", options: ["Flat","Round","Square","Triangle"], answer: 1 }
+];
+
+let currentQ = 0;
+let score = 0;
+let timeLeft = 30;
+let timer;
+
+function loadQuestion() {
+  if (currentQ >= questions.length) {
+    showResult();
+    return;
+  }
+
+  timeLeft = 30;
+  document.getElementById("timer").innerText = "Time: " + timeLeft;
+
+  const q = questions[currentQ];
+  document.getElementById("question").innerText = q.q;
+
+  const optionsDiv = document.getElementById("options");
+  optionsDiv.innerHTML = "";
+
+  q.options.forEach((opt, index) => {
+    const btn = document.createElement("div");
+    btn.className = "btn";
+    btn.innerText = opt;
+    btn.onclick = () => selectAnswer(index);
+    optionsDiv.appendChild(btn);
+  });
+
+  startTimer();
+}
+
+function startTimer() {
+  clearInterval(timer);
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = "Time: " + timeLeft;
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      currentQ++;
+      loadQuestion();
+    }
+  }, 1000);
+}
+
+function selectAnswer(index) {
+  clearInterval(timer);
+  if (index === questions[currentQ].answer) {
+    score++;
+  }
+  currentQ++;
+  loadQuestion();
+}
+
+function showResult() {
+  document.body.innerHTML = `
+    <h2>Exam Finished</h2>
+    <h3>Your Score: ${score} / ${questions.length}</h3>
+  `;
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
